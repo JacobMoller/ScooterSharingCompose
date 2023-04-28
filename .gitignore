@@ -2,6 +2,9 @@
 .DS_Store
 **/.DS_Store
 
+# Remove idea files
+.idea
+
 # Google Services (e.g. APIs or Firebase)
 */google-services.json
 
