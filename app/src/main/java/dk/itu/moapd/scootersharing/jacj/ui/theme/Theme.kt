@@ -18,7 +18,7 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = ElectricGreen,
-    secondary = Color.Red,
+    secondary = ElectricGreenDark,
     tertiary = Color.Blue,
 
     /* Other default colors to override */
