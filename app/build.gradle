@@ -19,6 +19,12 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        Properties properties = new Properties()
+        properties.load(
+                project.rootProject.file("local.properties").newDataInputStream())
+        manifestPlaceholders = [
+                MAPS_API_KEY: "${properties.getProperty("MAPS_API_KEY")}"]
     }
 
     buildTypes {
@@ -88,6 +94,15 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.0'
     implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
+
+    //Maps
+    implementation 'com.google.maps.android:maps-compose:2.11.4'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'androidx.appcompat:appcompat-resources:1.6.1'
+
+    //Multiple Permissions
+    implementation 'com.google.accompanist:accompanist-permissions:0.31.0-alpha'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

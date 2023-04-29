@@ -373,6 +373,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
             }
         },
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen
     ) {
         Scaffold(
             topBar = {
@@ -398,9 +399,9 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
         )
         {
             Box(modifier = Modifier.padding(it)) {
-                NavHost(navController = navController, startDestination = "ScooterListScreen") { //SignInPage
+                NavHost(navController = navController, startDestination = "HomePage") {
                     composable("HomePage") {
-                        HomePage()
+                        CheckPermissions()
                     }
                     composable("PhotoPage") {
                         PhotoPage()
@@ -584,6 +585,15 @@ fun DrawerContent(
                     destination,
                     drawerState
                 ),
+                MenuItem(
+                    "Maps",
+                    "MapsScreen",
+                    Icons.Filled.LocationOn,
+                    navController,
+                    scope,
+                    destination,
+                    drawerState
+                ),
             )
             item {
                 Spacer(modifier = Modifier.height(40.dp))
@@ -629,7 +639,7 @@ fun DrawerHeader(userData: UserData?) {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(userData?.profilePictureUrl != null) {
+        if (userData?.profilePictureUrl != null) {
             AsyncImage(
                 model = userData.profilePictureUrl,
                 contentDescription = "Profile picture",
@@ -640,7 +650,7 @@ fun DrawerHeader(userData: UserData?) {
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-        if(userData?.username != null) {
+        if (userData?.username != null) {
             Text(
                 text = userData.username,
                 textAlign = TextAlign.Center,
@@ -649,16 +659,6 @@ fun DrawerHeader(userData: UserData?) {
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-    }
-}
-
-@Composable
-fun HomePage() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Home Page Content")
     }
 }
 
