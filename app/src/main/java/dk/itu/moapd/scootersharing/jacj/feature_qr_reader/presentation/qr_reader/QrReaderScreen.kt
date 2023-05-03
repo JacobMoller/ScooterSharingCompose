@@ -1,8 +1,8 @@
-package dk.itu.moapd.scootersharing.jacj
+package dk.itu.moapd.scootersharing.jacj.feature_qr_reader.presentation.qr_reader
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,17 +42,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import dk.itu.moapd.scootersharing.jacj.R
 import dk.itu.moapd.scootersharing.jacj.core.domain.model.Scooter
 import dk.itu.moapd.scootersharing.jacj.feature_qr_reader.domain.util.QrCodeAnalyzer
+import dk.itu.moapd.scootersharing.jacj.toJson
 
 @Composable
 fun QrReaderScreen(navController: NavHostController, scooter: Scooter?) {
-    Log.i("HEEEEE", "Now in QrCodeScanner")
-    if(scooter == null){
+    if (scooter == null) {
         navController.navigate("HomePage/0/0/")
     }
-    Log.i("HEEEEE", "Current scooter in QRSCANNER" + scooter.toJson().toString())
-    Log.i("HEEEEE", "further in QrCodeScanner #1")
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember {
@@ -66,25 +66,23 @@ fun QrReaderScreen(navController: NavHostController, scooter: Scooter?) {
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
-    Log.d("HEEEE", "hasCameraPermission is currently: " + hasCameraPermission)
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { granted ->
             hasCameraPermission = granted
         }
     )
-    Log.i("HEEEEE", "further in QrCodeScanner #2")
     LaunchedEffect(key1 = true) {
         launcher.launch(Manifest.permission.CAMERA)
     }
-    Log.i("HEEEEE", "further in QrCodeScanner #3")
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if(hasCameraPermission) {
+        if (hasCameraPermission) {
             val primary = MaterialTheme.colorScheme.primary
-            val stroke = Stroke(width = 30f,
+            val stroke = Stroke(
+                width = 30f,
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(50f, 50f), 0f)
             )
             Text(
@@ -108,7 +106,7 @@ fun QrReaderScreen(navController: NavHostController, scooter: Scooter?) {
                     }
                     .clipToBounds()
             ) {
-                Log.i("HEEEEE", "further in QrCodeScanner #4")
+                var toastContent = stringResource(R.string.qr_wrong_qr_toast_content)
                 AndroidView(
                     factory = { context ->
                         val previewView = PreviewView(context)
@@ -123,14 +121,10 @@ fun QrReaderScreen(navController: NavHostController, scooter: Scooter?) {
                         imageAnalysis.setAnalyzer(
                             ContextCompat.getMainExecutor(context),
                             QrCodeAnalyzer { result ->
-                                Log.d("HEEEE", "We have a result!")
-
-                                if("CPH" + result == scooter?.name){
-                                    Log.d("HEEEE", "We have a match!")
-                                    navController.navigate("HomePage/" + scooter?.coords?.lat + "/" + scooter?.coords?.long + "/?QRScanned=" + scooter.toJson())
-                                }
-                                else {
-                                    Log.i("HEEEE", "No result. Compared CPH" + result + " with " + scooter?.name)
+                                if ("CPH$result" == scooter?.name) {
+                                    navController.navigate("HomePage/" + scooter.coords?.lat + "/" + scooter.coords?.long + "/?QRScanned=" + scooter.toJson())
+                                } else {
+                                    Toast.makeText(context, toastContent, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         )

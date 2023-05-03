@@ -12,19 +12,19 @@ import dk.itu.moapd.scootersharing.jacj.core.domain.model.Coords
 import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.util.getBitmapDescriptor
 
 @Composable
-fun MapMarker(coords: Coords, onClick: (Marker) -> Boolean) {
+fun MapMarker(coordinates: Coords, onClick: (Marker) -> Boolean) {
     Marker(
         state = MarkerState(
             position = LatLng(
-                coords.lat!!,
-                coords.long!!
+                coordinates.lat!!,
+                coordinates.long!!
             ),
         ),
         icon = getBitmapDescriptor(
             if(isSystemInDarkTheme()) R.drawable.map_scooter_marker_dark else R.drawable.map_scooter_marker_light,
             LocalContext.current
         ),
-        tag = 0,
+        tag = "MarkerTag",
         onClick = onClick
     )
 }

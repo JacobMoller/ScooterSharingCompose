@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.services.Location
+package dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.util
 
 import android.Manifest
 import android.content.Context

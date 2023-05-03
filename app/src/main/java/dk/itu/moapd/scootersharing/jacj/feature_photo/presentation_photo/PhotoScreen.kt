@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj
+package dk.itu.moapd.scootersharing.jacj.feature_photo.presentation_photo
 
 import android.Manifest
 import android.app.Activity
@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +36,7 @@ import java.io.ByteArrayOutputStream
 
 @Composable
 fun PhotoScreen(navController: NavHostController, scooter: Scooter) {
-    var context = LocalContext.current
+    val context = LocalContext.current
     var hasCameraPermission by rememberSaveable {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -56,27 +55,30 @@ fun PhotoScreen(navController: NavHostController, scooter: Scooter) {
         launcher.launch(Manifest.permission.CAMERA)
     }
     var shouldShowPhoto by rememberSaveable { mutableStateOf(false) }
-    var _bitmap by rememberSaveable { mutableStateOf(Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)) }
+    var bitmap by rememberSaveable {
+        mutableStateOf(
+            Bitmap.createBitmap(
+                1,
+                1,
+                Bitmap.Config.ARGB_8888
+            )
+        )
+    }
     val resultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                if (result?.data != null) {
-                    _bitmap = result.data?.extras?.get("data") as Bitmap
+                if (result.data != null) {
+                    bitmap = result.data?.extras?.get("data") as Bitmap
                     shouldShowPhoto = true
 
                     //Upload photo
-                    Log.d("HEEEE", "Image taken.")
-                    Log.d("HEEEE", "Result.data" + result.data!!)
-                    Log.d("HEEEE", "Result.data.data" + result.data?.extras)
                     val storage = Firebase.storage
-                    var auth = FirebaseAuth.getInstance()
+                    val auth = FirebaseAuth.getInstance()
                     auth.currentUser?.let {
                         val baos = ByteArrayOutputStream()
-                        _bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val data = baos.toByteArray()
-                        Log.d("HEEEE", "Image taken and user is logged in.")
                         val image = storage.reference.child("scooters/${scooter.name}.png")
-                        Log.d("HEEEE", "Calling Upload")
                         uploadImageToBucket(data, image, navController)
                     }
                 }
@@ -85,12 +87,14 @@ fun PhotoScreen(navController: NavHostController, scooter: Scooter) {
 
     val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(20.dp),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center) {
-        if(hasCameraPermission) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        if (hasCameraPermission) {
             Text(text = "Please park the scooter safely and take a photo of the parked scooter.")
             Button(onClick = {
                 resultLauncher.launch(cameraIntent)
@@ -109,7 +113,6 @@ private fun uploadImageToBucket(
     image: StorageReference,
     navController: NavHostController
 ) {
-    Log.d("HEEEE", "Starting Upload.")
     image.putBytes(test).addOnSuccessListener {
         navController.navigate("RideSummary")
     }

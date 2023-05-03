@@ -7,7 +7,7 @@ import android.location.LocationManager
 import android.os.Looper
 import com.google.android.gms.location.*
 import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.repository.LocationClient
-import dk.itu.moapd.scootersharing.jacj.services.Location.hasLocationPermission
+import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.util.hasLocationPermission
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

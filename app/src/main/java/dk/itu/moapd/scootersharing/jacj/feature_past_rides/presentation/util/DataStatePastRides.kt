@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentaiton.util
+package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.util
 
 import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
 

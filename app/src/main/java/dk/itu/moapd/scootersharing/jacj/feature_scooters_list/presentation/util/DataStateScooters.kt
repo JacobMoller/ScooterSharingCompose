@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj
+package dk.itu.moapd.scootersharing.jacj.feature_scooters_list.presentation.util
 
 import dk.itu.moapd.scootersharing.jacj.core.domain.model.Scooter
 

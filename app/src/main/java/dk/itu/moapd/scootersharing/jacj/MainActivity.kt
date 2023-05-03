@@ -76,8 +76,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import dk.itu.moapd.scootersharing.jacj.core.domain.model.Scooter
 import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.util.GoogleAuthUIClient
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.presentation.sign_in_screen.SignInScreen
 import dk.itu.moapd.scootersharing.jacj.feature_authentication.presentation.sign_in_screen.SignInViewModel
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.SignInScreen
+import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.map_screen.CheckPermissions
+import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.past_rides.PastRidesScreen
+import dk.itu.moapd.scootersharing.jacj.feature_photo.presentation_photo.PhotoScreen
+import dk.itu.moapd.scootersharing.jacj.feature_qr_reader.presentation.qr_reader.QrReaderScreen
+import dk.itu.moapd.scootersharing.jacj.feature_ride_summary.presentation.ride_summary.RideSummary
+import dk.itu.moapd.scootersharing.jacj.feature_scooters_list.presentation.scooter_list.ScooterListScreen
 import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.UserData
 import dk.itu.moapd.scootersharing.jacj.ui.theme.ScooterSharingTheme
 import kotlinx.coroutines.CoroutineScope
@@ -86,7 +92,8 @@ import kotlinx.coroutines.launch
 /**
  * Firebase Realtime Database URL.
  */
-const val DATABASE_URL = "https://scooter-sharing-5c9ca-default-rtdb.europe-west1.firebasedatabase.app/"
+const val DATABASE_URL =
+    "https://scooter-sharing-5c9ca-default-rtdb.europe-west1.firebasedatabase.app/"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,7 +139,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
 
     ModalNavigationDrawer(
         drawerContent = {
-            ModalDrawerSheet (drawerContainerColor=MaterialTheme.colorScheme.background){
+            ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.background) {
                 DrawerContent(
                     navController = navController,
                     drawerState = drawerState,
@@ -145,8 +152,8 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
     ) {
         Scaffold(
             topBar = {
-                var route = navBackStackEntry?.destination?.route
-                if(route != "RideSummary" && route != "SignInPage") {
+                val route = navBackStackEntry?.destination?.route
+                if (route != "RideSummary" && route != "SignInPage") {
                     TopAppBar(
                         title = { Text(text = stringResource(R.string.app_name)) },
                         navigationIcon = {
@@ -170,7 +177,10 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
         )
         {
             Box(modifier = Modifier.padding(it)) {
-                NavHost(navController = navController, startDestination = "HomePage/{lat}/{long}/?QRScanned={QRScanned}") {
+                NavHost(
+                    navController = navController,
+                    startDestination = "HomePage/{lat}/{long}/?QRScanned={QRScanned}"
+                ) {
                     composable(
                         "HomePage/{lat}/{long}/?QRScanned={QRScanned}",
                         arguments = listOf(navArgument("QRScanned") { defaultValue = "" })
@@ -179,7 +189,8 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                             backStackEntry.arguments?.getString("lat"),
                             backStackEntry.arguments?.getString("long"),
                             navController,
-                            backStackEntry.arguments?.getString("QRScanned")?.fromJson(Scooter::class.java)
+                            backStackEntry.arguments?.getString("QRScanned")
+                                ?.fromJson(Scooter::class.java)
                         )
                     }
                     composable(
@@ -188,11 +199,11 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                             type = NavType.StringType
                         })
                     ) { backStackEntry ->
-                            backStackEntry.arguments?.getString("Scooter")
-                                ?.let { jsonString ->
-                                    val scooterConverted = jsonString.fromJson(Scooter::class.java)
-                                    PhotoScreen(navController, scooterConverted)
-                                }
+                        backStackEntry.arguments?.getString("Scooter")
+                            ?.let { jsonString ->
+                                val scooterConverted = jsonString.fromJson(Scooter::class.java)
+                                PhotoScreen(navController, scooterConverted)
+                            }
                     }
                     composable(
                         "QrCodeScannerPage/{Scooter}/",
@@ -214,7 +225,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                         ScooterListScreen(navController)
                     }
                     composable("RentalHistory") {
-                        PastRidesScreen(navController)
+                        PastRidesScreen()
                     }
                     composable("RideSummary") {
                         RideSummary(navController)
@@ -224,7 +235,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                         val state by viewModel.state.collectAsStateWithLifecycle()
 
                         LaunchedEffect(key1 = Unit) {
-                            if(googleAuthUIClient.getSignedInUser() != null) {
+                            if (googleAuthUIClient.getSignedInUser() != null) {
                                 navController.navigate("HomePage/0/0/")
                             }
                         }
@@ -232,7 +243,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                         val launcher = rememberLauncherForActivityResult(
                             contract = ActivityResultContracts.StartIntentSenderForResult(),
                             onResult = { result ->
-                                if(result.resultCode == RESULT_OK) {
+                                if (result.resultCode == RESULT_OK) {
                                     lifecycleScope.launch {
                                         val signInResult = googleAuthUIClient.signInWithIntent(
                                             intent = result.data ?: return@launch
@@ -244,7 +255,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                         )
 
                         LaunchedEffect(key1 = state.isSignInSuccessful) {
-                            if(state.isSignInSuccessful) {
+                            if (state.isSignInSuccessful) {
                                 Toast.makeText(
                                     applicationContext,
                                     "Sign in successful",
@@ -407,7 +418,7 @@ fun CustomNavigationItem(
     item: MenuItem
 ) {
     NavigationDrawerItem(
-        icon = { Icon(item.icon, contentDescription = item.label)},
+        icon = { Icon(item.icon, contentDescription = item.label) },
         label = { Text(text = item.label) },
         selected = item.destination?.route == item.destinationName,
         onClick = {
@@ -432,4 +443,12 @@ fun CustomNavigationItem(
     )
 }
 
-data class MenuItem @OptIn(ExperimentalMaterial3Api::class) constructor(var label: String, var destinationName: String, var icon: ImageVector, var navController: NavController, var scope: CoroutineScope, var destination: NavDestination?, var drawerState: DrawerState)
+data class MenuItem @OptIn(ExperimentalMaterial3Api::class) constructor(
+    var label: String,
+    var destinationName: String,
+    var icon: ImageVector,
+    var navController: NavController,
+    var scope: CoroutineScope,
+    var destination: NavDestination?,
+    var drawerState: DrawerState
+)

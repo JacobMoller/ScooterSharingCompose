@@ -11,4 +11,8 @@
     <string name="map_ride_button_scan">Scan QR</string>
     <string name="map_ride_button_start">Start Ride</string>
     <string name="map_ride_button_stop">Stop Ride</string>
+    <string name="auth_sign_in_with_google">Sign in with Google</string>
+    <string name="qr_wrong_qr_toast_content">This QR-code is not associated with the selected scooter. Please confirm the QR-code and try again or contact support.</string>
+    <string name="ride_summary_thanks">Thanks for using ScooterSharing!</string>
+    <string name="ride_summary_close">Close</string>
 </resources>

@@ -12,7 +12,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.jacj.DATABASE_URL
-import dk.itu.moapd.scootersharing.jacj.DataStateScooter
+import dk.itu.moapd.scootersharing.jacj.feature_scooters_list.presentation.util.DataStateScooter
 import dk.itu.moapd.scootersharing.jacj.core.domain.model.Scooter
 import kotlinx.coroutines.launch
 

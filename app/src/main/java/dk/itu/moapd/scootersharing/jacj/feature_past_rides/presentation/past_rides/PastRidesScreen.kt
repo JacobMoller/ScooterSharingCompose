@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj
+package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.past_rides
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,20 +21,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import dk.itu.moapd.scootersharing.jacj.core.presentation.components.user_scooter_image.UserScooterImage
 import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentaiton.past_rides.PastRidesViewModel
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentaiton.util.DataStatePastRide
+import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.util.DataStatePastRide
 import java.sql.Timestamp
 import java.util.Date
 
-lateinit var navControl: NavController
 @Composable
-fun PastRidesScreen(navController: NavHostController) {
-    navControl = navController
+fun PastRidesScreen() {
     val viewModel: PastRidesViewModel = viewModel()
     when (val result = viewModel.response.value) {
         is DataStatePastRide.Loading -> {
@@ -45,9 +41,11 @@ fun PastRidesScreen(navController: NavHostController) {
                 CircularProgressIndicator()
             }
         }
+
         is DataStatePastRide.Success -> {
             ShowLazyList(result.data)
         }
+
         is DataStatePastRide.Failure -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -56,6 +54,7 @@ fun PastRidesScreen(navController: NavHostController) {
                 Text(text = result.message)
             }
         }
+
         else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -82,7 +81,7 @@ private fun ShowLazyList(items: MutableList<PastRide>) {
                 modifier = Modifier.padding(top = 25.dp, bottom = 25.dp)
             )
         }
-        if(items.toList().size == 0) {
+        if (items.toList().isEmpty()) {
             item {
                 Text(text = "No rides yet.")
             }
@@ -93,6 +92,7 @@ private fun ShowLazyList(items: MutableList<PastRide>) {
         }
     }
 }
+
 @Composable
 private fun ScooterCard(
     pastRide: PastRide,
@@ -106,7 +106,7 @@ private fun ScooterCard(
         shape = RoundedCornerShape(15.dp)
     ) {
         Column(modifier = modifier) {
-            UserProvidedScooterImage(storage, pastRide.scooter?.name!!)
+            UserScooterImage(storage, pastRide.scooter?.name!!)
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.secondary)

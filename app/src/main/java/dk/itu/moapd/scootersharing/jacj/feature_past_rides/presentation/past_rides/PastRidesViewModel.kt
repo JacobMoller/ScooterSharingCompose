@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentaiton.past_rides
+package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.past_rides
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -11,11 +11,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.jacj.DATABASE_URL
 import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentaiton.util.DataStatePastRide
+import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.util.DataStatePastRide
 
 
 class PastRidesViewModel : ViewModel() {
     val response: MutableState<DataStatePastRide> = mutableStateOf(DataStatePastRide.Empty)
+
     init {
         fetchDataFromFirebase()
     }
@@ -23,7 +24,7 @@ class PastRidesViewModel : ViewModel() {
     private fun fetchDataFromFirebase() {
         val pastRideList = mutableListOf<PastRide>()
         response.value = DataStatePastRide.Loading
-        var auth = Firebase.auth
+        val auth = Firebase.auth
         auth.currentUser?.let { user ->
             Firebase.database(DATABASE_URL).getReference("pastrides/${user.uid}")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -35,6 +36,7 @@ class PastRidesViewModel : ViewModel() {
                         }
                         response.value = DataStatePastRide.Success(pastRideList)
                     }
+
                     override fun onCancelled(error: DatabaseError) {
                         response.value = DataStatePastRide.Failure(error.message)
                     }

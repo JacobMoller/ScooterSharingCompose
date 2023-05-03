@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj
+package dk.itu.moapd.scootersharing.jacj.feature_map.presentation.util
 
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -22,9 +22,11 @@ fun getTextToShowGivenPermissions(
             revokedPermissionsSize > 1 && i == revokedPermissionsSize - 2 -> {
                 textToShow.append(", and ")
             }
+
             i == revokedPermissionsSize - 1 -> {
                 textToShow.append(" ")
             }
+
             else -> {
                 textToShow.append(", ")
             }

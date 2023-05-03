@@ -6,7 +6,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationServices
 import dk.itu.moapd.scootersharing.jacj.MainActivity
@@ -49,7 +48,7 @@ class LocationService: Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    lateinit var startDate: Date
+    private lateinit var startDate: Date
 
     private fun start() {
         //Now
@@ -70,14 +69,13 @@ class LocationService: Service() {
         notification.setContentIntent(contentIntent)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        Log.d("HEEEE","Starting Location-trace");
         //Get location and update notification
         locationClient.getLocationUpdates(1000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 val now = Date()
 
-                val diff: Long = now.getTime() - startDate.getTime()
+                val diff: Long = now.time - startDate.time
                 val seconds = (diff / 1000)
                 val minutes = seconds / 60
                 val price = seconds * 0.025 + 5
@@ -99,8 +97,8 @@ class LocationService: Service() {
     }
 
     private fun formatTime(minutes: Long, seconds: Long): String {
-        var remainingSeconds = seconds % 60
-        var date = "";
+        val remainingSeconds = seconds % 60
+        var date = ""
         if(minutes < 10)
             date += "0"
         date += minutes
@@ -114,10 +112,6 @@ class LocationService: Service() {
     private fun stop() {
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
-        Log.d("HEEEE","Location-trace");
-        for (location in locationTrace) {
-            Log.d("HEEEE", location.toString())
-        }
     }
 
     override fun onDestroy() {

@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_location_service
+package dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.util
 
 import android.content.Context
 import android.location.Address
@@ -10,9 +10,8 @@ import java.util.Locale
 /**
  * Use Geocoder API to convert the current location into a `String` address, and update the
  * corresponding UI component.
- *
- * @param latitude The current latitude coordinate.
- * @param longitude The current longitude coordinate.
+ * @param context A suitable context for the geocoder to consume
+ * @param coordinates The current latitude and longitude coordinate.
  */
 fun setAddress(context: Context, coordinates: Coords?): String? {
     if (!Geocoder.isPresent())
@@ -20,7 +19,7 @@ fun setAddress(context: Context, coordinates: Coords?): String? {
     val lat = coordinates?.lat
     val long = coordinates?.long
 
-    var result = "";
+    var result = ""
 
     // Create the `Geocoder` instance.
     val geocoder = Geocoder(context, Locale.getDefault())
