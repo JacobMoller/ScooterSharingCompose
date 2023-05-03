@@ -1,4 +1,14 @@
 <resources>
+    <!-- General -->
     <string name="app_name">ScooterSharing</string>
     <string name="web_client_id">258682259364-ohiae4h7ulgfgjvpass67alqqn4jqd8t.apps.googleusercontent.com</string>
+
+    <!-- Map Screen -->
+    <string name="map_dialog_unlock_scooter">Unlock Scooter</string>
+    <string name="map_dialog_description">When you start riding, you will be charged 10DKK + 2DKK/Minute. Note that the scooter will update to reflect your end-location, which will reveal your location publicly to other users. Do you wish to proceed?</string>
+    <string name="map_dialog_confirm">Confirm</string>
+    <string name="map_dialog_cancel">Cancel</string>
+    <string name="map_ride_button_scan">Scan QR</string>
+    <string name="map_ride_button_start">Start Ride</string>
+    <string name="map_ride_button_stop">Stop Ride</string>
 </resources>

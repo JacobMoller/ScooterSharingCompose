@@ -83,7 +83,6 @@ dependencies {
 
     // Zxing
     implementation 'com.google.zxing:core:3.3.3'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.3.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-auth-ktx:21.3.0'
@@ -95,14 +94,27 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.0'
     implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
 
-    //Maps
+    // Maps
     implementation 'com.google.maps.android:maps-compose:2.11.4'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
 
-    //Multiple Permissions
+    // Multiple Permissions
     implementation 'com.google.accompanist:accompanist-permissions:0.31.0-alpha'
+
+    // SplashScreen
+    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    // GSON
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Firebase Storage
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

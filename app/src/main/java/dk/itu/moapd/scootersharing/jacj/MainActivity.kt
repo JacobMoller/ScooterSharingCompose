@@ -9,8 +9,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,13 +21,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -53,14 +48,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -70,252 +63,34 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import coil.compose.AsyncImage
 import com.google.android.gms.auth.api.identity.Identity
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.GoogleAuthUIClient
+import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
+import dk.itu.moapd.scootersharing.jacj.core.domain.model.Scooter
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.util.GoogleAuthUIClient
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.presentation.sign_in_screen.SignInViewModel
 import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.SignInScreen
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.SignInViewModel
 import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.UserData
 import dk.itu.moapd.scootersharing.jacj.ui.theme.ScooterSharingTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-/*
-class MainActivity : ComponentActivity() {
+/**
+ * Firebase Realtime Database URL.
+ */
+const val DATABASE_URL = "https://scooter-sharing-5c9ca-default-rtdb.europe-west1.firebasedatabase.app/"
 
-    private val googleAuthUiClient by lazy {
-        GoogleAuthUIClient(
-            context = applicationContext,
-            oneTapClient = Identity.getSignInClient(applicationContext)
-        )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ScooterSharingTheme() {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "sign_in") {
-                        composable("sign_in") {
-                            val viewModel = viewModel<SignInViewModel>()
-                            val state by viewModel.state.collectAsStateWithLifecycle()
-
-                            LaunchedEffect(key1 = Unit) {
-                                if(googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate("profile")
-                                }
-                            }
-
-                            val launcher = rememberLauncherForActivityResult(
-                                contract = ActivityResultContracts.StartIntentSenderForResult(),
-                                onResult = { result ->
-                                    if(result.resultCode == RESULT_OK) {
-                                        lifecycleScope.launch {
-                                            val signInResult = googleAuthUiClient.signInWithIntent(
-                                                intent = result.data ?: return@launch
-                                            )
-                                            viewModel.onSignInResult(signInResult)
-                                        }
-                                    }
-                                }
-                            )
-
-                            LaunchedEffect(key1 = state.isSignInSuccessful) {
-                                if(state.isSignInSuccessful) {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Sign in successful",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-
-                                    navController.navigate("profile")
-                                    viewModel.resetState()
-                                }
-                            }
-
-                            SignInScreen(
-                                state = state,
-                                onSignInClick = {
-                                    Log.i("important", "clicked!")
-                                    lifecycleScope.launch {
-                                        val signInIntentSender = googleAuthUiClient.signIn()
-                                        launcher.launch(
-                                            IntentSenderRequest.Builder(
-                                                signInIntentSender ?: return@launch
-                                            ).build()
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                        composable("profile") {
-                            ProfileScreen(
-                                userData = googleAuthUiClient.getSignedInUser(),
-                                onSignOut = {
-                                    lifecycleScope.launch {
-                                        googleAuthUiClient.signOut()
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Signed out",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-
-                                        navController.popBackStack()
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ProfileScreen(
-    userData: UserData?,
-    onSignOut: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if(userData?.profilePictureUrl != null) {
-            AsyncImage(
-                model = userData.profilePictureUrl,
-                contentDescription = "Profile picture",
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        if(userData?.username != null) {
-            Text(
-                text = userData.username,
-                textAlign = TextAlign.Center,
-                fontSize = 36.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        Button(onClick = onSignOut) {
-            Text(text = "Sign out")
-        }
-    }
-}*/
-/*
-class MainActivity : ComponentActivity() {
-
-    private val googleAuthUiClient by lazy {
-        GoogleAuthUIClient(
-            context = applicationContext,
-            oneTapClient = Identity.getSignInClient(applicationContext)
-        )
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            ScooterSharingTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "sign_in") {
-                        composable("sign_in") {
-                            val viewModel = viewModel<SignInViewModel>()
-                            val state by viewModel.state.collectAsStateWithLifecycle()
-
-                            LaunchedEffect(key1 = Unit) {
-                                if(googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate("profile")
-                                }
-                            }
-
-                            val launcher = rememberLauncherForActivityResult(
-                                contract = ActivityResultContracts.StartIntentSenderForResult(),
-                                onResult = { result ->
-                                    if(result.resultCode == RESULT_OK) {
-                                        lifecycleScope.launch {
-                                            val signInResult = googleAuthUiClient.signInWithIntent(
-                                                intent = result.data ?: return@launch
-                                            )
-                                            viewModel.onSignInResult(signInResult)
-                                        }
-                                    }
-                                }
-                            )
-
-                            LaunchedEffect(key1 = state.isSignInSuccessful) {
-                                if(state.isSignInSuccessful) {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Sign in successful",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-
-                                    navController.navigate("profile")
-                                    viewModel.resetState()
-                                }
-                            }
-
-                            SignInScreen(
-                                state = state,
-                                onSignInClick = {
-                                    lifecycleScope.launch {
-                                        val signInIntentSender = googleAuthUiClient.signIn()
-                                        launcher.launch(
-                                            IntentSenderRequest.Builder(
-                                                signInIntentSender ?: return@launch
-                                            ).build()
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                        /*composable("profile") {
-                            ProfileScreen(
-                                userData = googleAuthUiClient.getSignedInUser(),
-                                onSignOut = {
-                                    lifecycleScope.launch {
-                                        googleAuthUiClient.signOut()
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Signed out",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-
-                                        navController.popBackStack()
-                                    }
-                                }
-                            )
-                        }*/
-                    }
-                }
-            }
-        }
-    }
-}*/
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             ScooterSharingTheme {
                 // A surface container using the 'background' color from the theme
@@ -330,21 +105,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun <A> A.toJson(): String? {
+    return Gson().toJson(this)
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ScooterSharingTheme {
-        Greeting("Android")
-    }
+fun <A> String.fromJson(type: Class<A>): A {
+    return Gson().fromJson(this, type)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -362,6 +128,8 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
         )
     }
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet (drawerContainerColor=MaterialTheme.colorScheme.background){
@@ -377,40 +145,79 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
     ) {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(text = stringResource(R.string.app_name)) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            if (drawerState.isClosed) {
-                                scope.launch {
-                                    drawerState.open()
+                var route = navBackStackEntry?.destination?.route
+                if(route != "RideSummary" && route != "SignInPage") {
+                    TopAppBar(
+                        title = { Text(text = stringResource(R.string.app_name)) },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                if (drawerState.isClosed) {
+                                    scope.launch {
+                                        drawerState.open()
+                                    }
+                                } else {
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
                                 }
-                            } else {
-                                scope.launch {
-                                    drawerState.close()
-                                }
+                            }) {
+                                Icon(Icons.Filled.Menu, contentDescription = "Drawer Menu")
                             }
-                        }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Drawer Menu")
-                        }
-                    },
-                )
+                        },
+                    )
+                }
             },
         )
         {
             Box(modifier = Modifier.padding(it)) {
-                NavHost(navController = navController, startDestination = "HomePage") {
-                    composable("HomePage") {
-                        CheckPermissions()
+                NavHost(navController = navController, startDestination = "HomePage/{lat}/{long}/?QRScanned={QRScanned}") {
+                    composable(
+                        "HomePage/{lat}/{long}/?QRScanned={QRScanned}",
+                        arguments = listOf(navArgument("QRScanned") { defaultValue = "" })
+                    ) { backStackEntry ->
+                        CheckPermissions(
+                            backStackEntry.arguments?.getString("lat"),
+                            backStackEntry.arguments?.getString("long"),
+                            navController,
+                            backStackEntry.arguments?.getString("QRScanned")?.fromJson(Scooter::class.java)
+                        )
                     }
-                    composable("PhotoPage") {
-                        PhotoPage()
+                    composable(
+                        "PhotoPage/{Scooter}/",
+                        arguments = listOf(navArgument("Scooter") {
+                            type = NavType.StringType
+                        })
+                    ) { backStackEntry ->
+                            backStackEntry.arguments?.getString("Scooter")
+                                ?.let { jsonString ->
+                                    val scooterConverted = jsonString.fromJson(Scooter::class.java)
+                                    PhotoScreen(navController, scooterConverted)
+                                }
                     }
-                    composable("QrCodeScannerPage") {
-                        QrCodeScannerScreen()
+                    composable(
+                        "QrCodeScannerPage/{Scooter}/",
+                        arguments = listOf(navArgument("Scooter") {
+                            type = NavType.StringType
+                        })
+                    ) { backStackEntry ->
+
+                        backStackEntry.arguments?.getString("Scooter")
+                            ?.let { jsonString ->
+                                val scooterConverted = jsonString.fromJson(Scooter::class.java)
+                                QrReaderScreen(
+                                    navController,
+                                    scooterConverted
+                                )
+                            }
                     }
                     composable("ScooterListScreen") {
-                        ScooterListScreen()
+                        ScooterListScreen(navController)
+                    }
+                    composable("RentalHistory") {
+                        PastRidesScreen(navController)
+                    }
+                    composable("RideSummary") {
+                        RideSummary(navController)
                     }
                     composable("SignInPage") {
                         val viewModel = viewModel<SignInViewModel>()
@@ -418,7 +225,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
 
                         LaunchedEffect(key1 = Unit) {
                             if(googleAuthUIClient.getSignedInUser() != null) {
-                                navController.navigate("HomePage")
+                                navController.navigate("HomePage/0/0/")
                             }
                         }
 
@@ -444,7 +251,7 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                                     Toast.LENGTH_LONG
                                 ).show()
 
-                                navController.navigate("HomePage")
+                                navController.navigate("HomePage/0/0/")
                                 viewModel.resetState()
                             }
                         }
@@ -463,61 +270,11 @@ fun MainPage(applicationContext: Context, lifecycleScope: LifecycleCoroutineScop
                             }
                         )
                     }
-                    composable("profile") {
-                        ProfileScreen(
-                            userData = googleAuthUIClient.getSignedInUser(),
-                            onSignOut = {
-                                lifecycleScope.launch {
-                                    googleAuthUIClient.signOut()
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Signed out",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-
-                                    navController.popBackStack()
-                                }
-                            }
-                        )
-                    }
+                }
+                if (FirebaseAuth.getInstance().currentUser == null) {
+                    navController.navigate("SignInPage")
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun ProfileScreen(
-    userData: UserData?,
-    onSignOut: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if(userData?.profilePictureUrl != null) {
-            AsyncImage(
-                model = userData.profilePictureUrl,
-                contentDescription = "Profile picture",
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        if(userData?.username != null) {
-            Text(
-                text = userData.username,
-                textAlign = TextAlign.Center,
-                fontSize = 36.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        Button(onClick = onSignOut) {
-            Text(text = "Sign out")
         }
     }
 }
@@ -551,26 +308,8 @@ fun DrawerContent(
             val menuItems = listOf(
                 MenuItem(
                     "Home",
-                    "HomePage",
+                    "HomePage/0/0/",
                     Icons.Filled.Home,
-                    navController,
-                    scope,
-                    destination,
-                    drawerState
-                ),
-                MenuItem(
-                    "Photo",
-                    "PhotoPage",
-                    Icons.Filled.Star,
-                    navController,
-                    scope,
-                    destination,
-                    drawerState
-                ),
-                MenuItem(
-                    "Qr Code Scanner",
-                    "QrCodeScannerPage",
-                    Icons.Filled.Create,
                     navController,
                     scope,
                     destination,
@@ -586,9 +325,9 @@ fun DrawerContent(
                     drawerState
                 ),
                 MenuItem(
-                    "Maps",
-                    "MapsScreen",
-                    Icons.Filled.LocationOn,
+                    "Rental History",
+                    "RentalHistory",
+                    Icons.Filled.Refresh,
                     navController,
                     scope,
                     destination,
