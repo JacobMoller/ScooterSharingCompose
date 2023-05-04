@@ -1,6 +1,5 @@
 package dk.itu.moapd.scootersharing.jacj
 
-import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag

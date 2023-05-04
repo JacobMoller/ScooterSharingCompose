@@ -78,11 +78,12 @@ class LocationService: Service() {
                 val diff: Long = now.time - startDate.time
                 val seconds = (diff / 1000)
                 val minutes = seconds / 60
-                val price = seconds * 0.025 + 5
+                price = minutes * 2 + 10
 
                 val lat = location.latitude
                 val long = location.longitude
                 locationTrace.add(Coords(lat,long))
+
                 //TODO: Add this to ride
 
                 val updatedNotification = notification.setContentText(
@@ -123,6 +124,7 @@ class LocationService: Service() {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
         var locationTrace: MutableList<Coords> = ArrayList()
+        var price: Long = 0;
     }
 
 }

@@ -53,6 +53,7 @@ import dk.itu.moapd.scootersharing.jacj.core.presentation.components.MainViewMod
 import dk.itu.moapd.scootersharing.jacj.core.presentation.components.user_scooter_image.UserScooterImage
 import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.LocationService
 import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.LocationService.Companion.locationTrace
+import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.LocationService.Companion.price
 import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.util.setAddress
 import dk.itu.moapd.scootersharing.jacj.feature_map.domain.model.RideState
 import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.components.map_marker.MapMarker
@@ -298,7 +299,7 @@ fun MapsScreen(navController: NavController, scooters: MutableList<Scooter>) {
                                         val timestamp = System.currentTimeMillis()
 
                                         val pastRide = PastRide(
-                                            viewModel.currentScooter.value!!, 10.0,
+                                            viewModel.currentScooter.value!!, price,
                                             locationTrace, timestamp
                                         )
                                         auth.currentUser?.let { user ->

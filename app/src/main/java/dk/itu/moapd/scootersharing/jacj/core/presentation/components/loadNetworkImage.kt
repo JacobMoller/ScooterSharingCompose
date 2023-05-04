@@ -13,6 +13,6 @@ fun loadNetworkImage(
 ): State<String> {
     return produceState(initialValue = "", url, imageRepository) {
         val image = imageRepository.getReference("scooters/${url}.png").downloadUrl.await()
-        value = image.toString() ?: ""
+        value = image.toString()
     }
 }

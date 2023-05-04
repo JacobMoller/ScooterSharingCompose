@@ -31,7 +31,7 @@ class MainViewModel : ViewModel() {
         val scooterList = mutableListOf<Scooter>()
         response.value = DataStateScooter.Loading
         var auth = Firebase.auth
-        auth.currentUser?.let { user ->
+        auth.currentUser?.let {
             Firebase.database(DATABASE_URL).getReference("scooters")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
