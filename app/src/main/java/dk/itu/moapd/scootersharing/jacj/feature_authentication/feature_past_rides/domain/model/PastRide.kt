@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model
+package dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.domain.model
 
 import dk.itu.moapd.scootersharing.jacj.core.domain.model.Coords
 import dk.itu.moapd.scootersharing.jacj.core.domain.model.Scooter

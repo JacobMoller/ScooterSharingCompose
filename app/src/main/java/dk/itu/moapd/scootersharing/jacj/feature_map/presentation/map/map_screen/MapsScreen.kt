@@ -57,9 +57,9 @@ import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.Location
 import dk.itu.moapd.scootersharing.jacj.feature_location_service.domain.util.setAddress
 import dk.itu.moapd.scootersharing.jacj.feature_map.domain.model.RideState
 import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.components.map_marker.MapMarker
-import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.components.map_marker.StartRideDialog
+import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.components.start_ride_dialog.StartRideDialog
 import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.util.getTextToShowGivenPermissions
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.domain.model.PastRide
 import dk.itu.moapd.scootersharing.jacj.toJson
 
 

@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.past_rides
+package dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.presentation.past_rides
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -10,8 +10,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.jacj.DATABASE_URL
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.util.DataStatePastRide
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.domain.model.PastRide
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.presentation.util.DataStatePastRide
 
 
 class PastRidesViewModel : ViewModel() {

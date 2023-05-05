@@ -8,33 +8,33 @@ import org.junit.Test
 class ScooterUnitTest {
     @Test
     fun scooterName_isCorrect() {
-        var scooter: Scooter = Scooter(coords = Coords(55.659153, 12.590966),"CPH001")
+        val scooter = Scooter(coords = Coords(55.659153, 12.590966),"CPH001")
 
-        var actual = scooter.name
+        val actual = scooter.name
 
-        var expected = "CPH001"
+        val expected = "CPH001"
 
         Assert.assertEquals(expected, actual)
     }
 
     @Test
     fun scooterLatitude_exists() {
-        var scooter: Scooter = Scooter(coords = Coords(55.659153, 12.590966),"CPH001")
+        val scooter = Scooter(coords = Coords(55.659153, 12.590966),"CPH001")
 
-        var actual = scooter.coords?.lat
+        val actual = scooter.coords?.lat
 
-        var expected = 55.659153
+        val expected = 55.659153
 
         Assert.assertEquals(expected, actual)
     }
 
     @Test
     fun scooterLongitude_exists() {
-        var scooter: Scooter = Scooter(coords = Coords(55.659153, 12.590966),"CPH001")
+        val scooter = Scooter(coords = Coords(55.659153, 12.590966),"CPH001")
 
-        var actual = scooter.coords?.long
+        val actual = scooter.coords?.long
 
-        var expected = 12.590966
+        val expected = 12.590966
 
         Assert.assertEquals(expected, actual)
     }

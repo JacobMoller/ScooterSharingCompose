@@ -10,8 +10,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.jacj.R
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.SignInResult
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.UserData
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.model.SignInResult
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.model.UserData
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.util.concurrent.CancellationException

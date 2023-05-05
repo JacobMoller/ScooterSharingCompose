@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.past_rides
+package dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.presentation.past_rides
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,8 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.jacj.core.presentation.components.user_scooter_image.UserScooterImage
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.util.DataStatePastRide
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.domain.model.PastRide
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.presentation.util.DataStatePastRide
 import java.sql.Timestamp
 import java.util.Date
 

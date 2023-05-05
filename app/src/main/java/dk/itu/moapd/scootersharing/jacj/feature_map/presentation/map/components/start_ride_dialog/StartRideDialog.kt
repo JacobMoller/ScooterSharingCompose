@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.components.map_marker
+package dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.components.start_ride_dialog
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

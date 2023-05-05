@@ -30,7 +30,7 @@ class MainViewModel : ViewModel() {
     private fun fetchDataFromFirebase() {
         val scooterList = mutableListOf<Scooter>()
         response.value = DataStateScooter.Loading
-        var auth = Firebase.auth
+        val auth = Firebase.auth
         auth.currentUser?.let {
             Firebase.database(DATABASE_URL).getReference("scooters")
                 .addListenerForSingleValueEvent(object : ValueEventListener {

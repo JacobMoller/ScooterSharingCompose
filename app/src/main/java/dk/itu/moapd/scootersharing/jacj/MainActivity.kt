@@ -79,12 +79,12 @@ import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.util.Googl
 import dk.itu.moapd.scootersharing.jacj.feature_authentication.presentation.sign_in_screen.SignInScreen
 import dk.itu.moapd.scootersharing.jacj.feature_authentication.presentation.sign_in_screen.SignInViewModel
 import dk.itu.moapd.scootersharing.jacj.feature_map.presentation.map.map_screen.CheckPermissions
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.past_rides.PastRidesScreen
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.presentation.past_rides.PastRidesScreen
 import dk.itu.moapd.scootersharing.jacj.feature_photo.presentation_photo.PhotoScreen
 import dk.itu.moapd.scootersharing.jacj.feature_qr_reader.presentation.qr_reader.QrReaderScreen
 import dk.itu.moapd.scootersharing.jacj.feature_ride_summary.presentation.ride_summary.RideSummary
 import dk.itu.moapd.scootersharing.jacj.feature_scooters_list.presentation.scooter_list.ScooterListScreen
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.UserData
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.model.UserData
 import dk.itu.moapd.scootersharing.jacj.ui.theme.ScooterSharingTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

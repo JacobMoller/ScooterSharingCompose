@@ -106,7 +106,7 @@ fun QrReaderScreen(navController: NavHostController, scooter: Scooter?) {
                     }
                     .clipToBounds()
             ) {
-                var toastContent = stringResource(R.string.qr_wrong_qr_toast_content)
+                val toastContent = stringResource(R.string.qr_wrong_qr_toast_content)
                 AndroidView(
                     factory = { context ->
                         val previewView = PreviewView(context)

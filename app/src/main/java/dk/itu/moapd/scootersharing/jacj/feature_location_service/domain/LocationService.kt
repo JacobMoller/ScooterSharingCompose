@@ -124,7 +124,7 @@ class LocationService: Service() {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
         var locationTrace: MutableList<Coords> = ArrayList()
-        var price: Long = 0;
+        var price: Long = 0
     }
 
 }

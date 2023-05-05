@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.jacj.presentation.sign_in
+package dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.model
 
 data class SignInResult(
     val data: UserData?,

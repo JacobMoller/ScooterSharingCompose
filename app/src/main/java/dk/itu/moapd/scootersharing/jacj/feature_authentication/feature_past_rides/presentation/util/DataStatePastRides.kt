@@ -1,6 +1,6 @@
-package dk.itu.moapd.scootersharing.jacj.feature_past_rides.presentation.util
+package dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.presentation.util
 
-import dk.itu.moapd.scootersharing.jacj.feature_past_rides.domain.model.PastRide
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.feature_past_rides.domain.model.PastRide
 
 sealed class DataStatePastRide {
     class Success(val data: MutableList<PastRide>) : DataStatePastRide()

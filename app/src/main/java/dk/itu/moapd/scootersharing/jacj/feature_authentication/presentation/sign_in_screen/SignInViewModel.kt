@@ -2,7 +2,7 @@ package dk.itu.moapd.scootersharing.jacj.feature_authentication.presentation.sig
 
 import androidx.lifecycle.ViewModel
 import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.model.SignInState
-import dk.itu.moapd.scootersharing.jacj.presentation.sign_in.SignInResult
+import dk.itu.moapd.scootersharing.jacj.feature_authentication.domain.model.SignInResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

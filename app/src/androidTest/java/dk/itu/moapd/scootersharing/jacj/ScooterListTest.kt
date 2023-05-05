@@ -16,7 +16,7 @@ class ScooterListTest {
     val rule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun ScooterListScreen_containsMapButtons() {
+    fun scooterListScreen_containsMapButtons() {
         rule.setContent { ScooterListScreen(navController = NavHostController(LocalContext.current)) }
 
         // Do something
